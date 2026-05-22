@@ -38,6 +38,9 @@ void HPMA115S0Component::dump_config() {
     } else {
       ESP_LOGCONFIG(TAG, "Sensor found after %i tries. Will read and log values.", setupTries);
     }
+  } else if (this->get_update_interval() == SCHEDULER_DONT_RUN) {
+    ESP_LOGW(TAG,
+             "Initial HPMA probe did not answer during setup. Waiting for the manual measurement cycle to initialize the sensor.");
   } else {
     ESP_LOGE(TAG, "Error! HPMA115S0 Particle Sensor not found! Failed with: %i AND %i.", setup_SAS, setup_SM);
   }
