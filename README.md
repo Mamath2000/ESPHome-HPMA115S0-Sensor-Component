@@ -1,5 +1,13 @@
 # ESPHome-HPMA115S0-Sensor-Component
-Integration for the HPMA115S0 Dust and Particle Sensor into ESPHome
+Integration for the HPMA115S0 Dust and Particle Sensor into ESPHome.
+
+This repository started from the upstream project by tom1422 and adds support for the HPMA variant observed on this installation.
+
+## Added in this fork
+- Autosend frame support for devices emitting 0x42 0x4D frames on UART.
+- Standard autosend mapping for the non-compact variant: Data1 -> PM2.5 and Data2 -> PM10.
+- Public commands for start measurement, stop measurement, enable autosend, stop autosend, set adjustment coefficient, and read adjustment coefficient.
+- Optional adjustment coefficient diagnostic sensor.
 
 ## How to install
 1. Download this repo through main branch or the releases page.
@@ -30,6 +38,15 @@ uart:
   tx_pin: 9 #Change tx_pin and rx_pin to the ones you're using
   rx_pin: 10
   baud_rate: 9600
+```
+
+## Use directly from GitHub with external_components
+```yaml
+external_components:
+  - source:
+      type: git
+      url: https://github.com/Mamath2000/ESPHome-HPMA115S0-Sensor-Component.git
+    components: [ hpma115s0_esphome ]
 ```
 
 ## Issues

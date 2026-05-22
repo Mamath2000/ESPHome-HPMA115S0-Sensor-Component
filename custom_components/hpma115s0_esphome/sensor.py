@@ -5,27 +5,27 @@ from esphome.const import (
     CONF_ID,
     CONF_PM_2_5,
     CONF_PM_10_0,
-    CONF_PM_1_0, #new
-    CONF_PM_4_0, #new
-    DEVICE_CLASS_AQI, #new
-    DEVICE_CLASS_PM1, #new
+    CONF_PM_1_0,
+    CONF_PM_4_0,
+    DEVICE_CLASS_AQI,
+    DEVICE_CLASS_PM1,
     DEVICE_CLASS_PM10,
     DEVICE_CLASS_PM25,
     STATE_CLASS_MEASUREMENT,
-    CONF_UPDATE_INTERVAL,
     UNIT_MICROGRAMS_PER_CUBIC_METER,
     ICON_CHEMICAL_WEAPON,
 )
 
 DEPENDENCIES = ["uart"]
 
-hpma115s0_ns = cg.esphome_ns.namespace("hpma115S0_esphome") #OLD: hm3301_ns = cg.esphome_ns.namespace("hpma115S0_esphome")
+hpma115s0_ns = cg.esphome_ns.namespace("hpma115S0_esphome")
 HPMA115S0Component = hpma115s0_ns.class_(
     "HPMA115S0Component", uart.UARTDevice, cg.PollingComponent
 )
 
 CONF_AQI_2_5 = "aqi_2_5"
 CONF_AQI_10_0 = "aqi_10_0"
+CONF_ADJUSTMENT_COEFFICIENT = "adjustment_coefficient"
 UNIT_INDEX = "index"
 
 CONFIG_SCHEMA = cv.All(
@@ -73,13 +73,16 @@ CONFIG_SCHEMA = cv.All(
                 accuracy_decimals=0,
                 state_class=STATE_CLASS_MEASUREMENT,
             ),
+            cv.Optional(CONF_ADJUSTMENT_COEFFICIENT): sensor.sensor_schema(
+                accuracy_decimals=0,
+                icon="mdi:tune",
+            ),
         }
     )
     .extend(cv.COMPONENT_SCHEMA)
     .extend(uart.UART_DEVICE_SCHEMA)
     .extend(cv.polling_component_schema("60s")),
 )
-
 
 
 async def to_code(config):
@@ -110,3 +113,7 @@ async def to_code(config):
     if CONF_PM_1_0 in config:
         sens = await sensor.new_sensor(config[CONF_PM_1_0])
         cg.add(var.set_pm_1_0_sensor(sens))
+
+    if CONF_ADJUSTMENT_COEFFICIENT in config:
+        sens = await sensor.new_sensor(config[CONF_ADJUSTMENT_COEFFICIENT])
+        cg.add(var.set_adjustment_coefficient_sensor(sens))
