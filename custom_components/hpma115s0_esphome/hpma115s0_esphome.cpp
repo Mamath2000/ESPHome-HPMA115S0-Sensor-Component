@@ -47,6 +47,16 @@ float HPMA115S0Component::get_setup_priority() const { return setup_priority::LA
 
 void HPMA115S0Component::update() {
   if (!measurement_running_) {
+    ESP_LOGW(TAG, "Measurement inactive; retrying HPMA initialization.");
+
+    if (start_measurement()) {
+      ESP_LOGI(TAG, "HPMA recovered by starting measurement.");
+    } else if (enable_autosend()) {
+      ESP_LOGI(TAG, "HPMA recovered by enabling autosend.");
+    } else {
+      return;
+    }
+
     return;
   }
 
