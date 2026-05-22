@@ -46,6 +46,7 @@ external_components:
   - source:
       type: git
       url: https://github.com/Mamath2000/ESPHome-HPMA115S0-Sensor-Component.git
+      path: custom_components
     components: [ hpma115s0_esphome ]
 ```
 
